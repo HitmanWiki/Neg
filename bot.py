@@ -12,12 +12,11 @@ FULLY AUTOMATED:
   - Goes live automatically when proven profitable
   - Sends summary to console every hour
 
-Install: pip install requests pandas python-dotenv py-clob-client
+Install: pip install requests python-dotenv py-clob-client
 Run:     python bot.py
 """
 
 import os, sys, time, json, logging, requests
-import pandas as pd
 from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 from dotenv import load_dotenv
@@ -152,9 +151,11 @@ class DB:
         key = "live_trades" if not trade.get("paper") else "paper_trades"
         self.performance[key].append(trade)
         if trade.get("paper"):
-            self.performance["total_paper_profit"] += trade["pnl"]
+            self.performance["total_paper_profit"] = round(
+                self.performance.get("total_paper_profit", 0) + trade["pnl"], 4)
         else:
-            self.performance["total_live_profit"]  += trade["pnl"]
+            self.performance["total_live_profit"] = round(
+                self.performance.get("total_live_profit", 0) + trade["pnl"], 4)
         self.save()
 
     def paper_stats(self):
