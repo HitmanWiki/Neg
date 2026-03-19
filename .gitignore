@@ -1,0 +1,8 @@
+.env
+*.log
+positions.json
+performance.json
+negrisk_scan.csv
+bot_log.csv
+__pycache__/
+*.pyc
