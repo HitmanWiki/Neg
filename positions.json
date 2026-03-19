@@ -1,0 +1,47 @@
+{
+  "272220": {
+    "title": "Highest temperature in London on March 19?",
+    "invested": 3.5700000000000003,
+    "profit_exp": 0.16,
+    "profit_pct": 0.0438,
+    "hrs_left": 3.1,
+    "placed_at": "2026-03-19T08:55:46.227051+00:00",
+    "n_outcomes": 7
+  },
+  "272257": {
+    "title": "Highest temperature in Tel Aviv on March 19?",
+    "invested": 2.88,
+    "profit_exp": 0.13,
+    "profit_pct": 0.046,
+    "hrs_left": 3.1,
+    "placed_at": "2026-03-19T08:55:48.245074+00:00",
+    "n_outcomes": 4
+  },
+  "279800": {
+    "title": "Israel Rocket Alerts by March 20?",
+    "invested": 2.31,
+    "profit_exp": 0.35,
+    "profit_pct": 0.1494,
+    "hrs_left": 15.1,
+    "placed_at": "2026-03-19T08:55:50.255552+00:00",
+    "n_outcomes": 3
+  },
+  "263723": {
+    "title": "Will the White House call a full lid by 6:30 PM? (March 16 - 21)",
+    "invested": 1.8599999999999999,
+    "profit_exp": 0.14,
+    "profit_pct": 0.0741,
+    "hrs_left": 39.1,
+    "placed_at": "2026-03-19T08:55:52.269693+00:00",
+    "n_outcomes": 3
+  },
+  "272233": {
+    "title": "Highest temperature in Sao Paulo on March 19?",
+    "invested": 3.6,
+    "profit_exp": 0.1,
+    "profit_pct": 0.0267,
+    "hrs_left": 3.0,
+    "placed_at": "2026-03-19T08:58:04.439304+00:00",
+    "n_outcomes": 9
+  }
+}
