@@ -226,21 +226,40 @@ def check_resolutions(db: DB):
             if not resolved:
                 continue
 
-            # Calculate actual PNL
-            # We bought all outcomes. One pays 1.0, rest pay 0.
-            # Actual profit = $1.00 - total_cost we paid
-            invested    = pos.get("invested", 0)
-            total_cost  = pos.get("total_cost", 0)
-            profit_pct  = (1 - total_cost) / total_cost if total_cost > 0 else 0
-            actual_pnl  = round(invested * profit_pct, 3)
+            # Calculate REALISTIC PNL with real costs simulated
+            invested     = pos.get("invested", 0)
+            total_cost   = pos.get("total_cost", 0)
+            n_outcomes   = pos.get("n", 3)
 
-            # Check if voided (all prices stayed between 0-1)
+            # Gross profit (paper)
+            gross_pct    = (1 - total_cost) / total_cost if total_cost > 0 else 0
+
+            # Real costs (maker orders = 0% fee, but spread + slippage apply)
+            # Spread:   ~1.5% per leg averaged across all outcomes
+            # Slippage: ~0.5% per leg
+            # These compound: 7 legs at 1.5% = 10.5% spread cost total
+            spread_cost   = 0.015 * n_outcomes
+            slippage_cost = 0.005 * n_outcomes
+            net_pct       = gross_pct - spread_cost - slippage_cost
+
+            # 10% chance one leg fails to fill (partial fill risk)
+            import random as _rnd
+            if _rnd.random() < 0.10:
+                actual_pnl = -round(invested * 0.30, 3)
+                status = "partial_fill_loss"
+            else:
+                actual_pnl = round(invested * net_pct, 3)
+                status = "won" if actual_pnl > 0 else "lost_to_costs"
+
+            log.info(f"  Realistic costs: spread={spread_cost:.1%} "
+                     f"slip={slippage_cost:.1%} "
+                     f"gross={gross_pct:.1%} net={net_pct:.1%}")
+
+            # Check if voided
             voided = all(0.01 < float(p) < 0.99 for p in prices)
             if voided:
-                actual_pnl = -round(invested * 0.5, 3)  # partial refund
-                status     = "voided"
-            else:
-                status = "won" if actual_pnl > 0 else "lost"
+                actual_pnl = -round(invested * 0.5, 3)
+                status = "voided"
 
             # Record result
             db.record_result({
@@ -249,7 +268,7 @@ def check_resolutions(db: DB):
                 "invested":  invested,
                 "pnl":       actual_pnl,
                 "status":    status,
-                "profit_pct":round(profit_pct * 100, 1),
+                "profit_pct":round(gross_pct * 100, 1),
                 "paper":     pos.get("paper", True),
                 "closed_at": now.isoformat(),
             })
